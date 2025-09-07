@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to generate a random number between 1 and 100
+int generateRandomNumber() {
+    srand(time(0));
+    return (rand() % 100) + 1;
+}
+
+// Function to get the user's guess
+int getUserGuess() {
+    int guess;
+    cout << "Enter your guess (between 1 and 100): ";
+    cin >> guess;
+    return guess;
+}
+
+// Function to give feedback based on the guess
+void giveFeedback(int guess, int target) {
+    if (guess > target) {
+        cout << "Your guess is too high. Try again.\n";
+    } else if (guess < target) {
+        cout << "Your guess is too low. Try again.\n";
+    }
+}
+
+// Main game logic
+void playGuessingGame() {
+    int computerNumber = generateRandomNumber();
+    int userGuess;
+    int attemptCount = 0;
+
+    cout << "Welcome to the Number Guessing Game!\n";
+    cout << "I have chosen a number between 1 and 100. Can you guess it?\n";
+
+    do {
+        userGuess = getUserGuess();
+        attemptCount++;
+
+        if (userGuess != computerNumber) {
+            giveFeedback(userGuess, computerNumber);
+        }
+
+    } while (userGuess != computerNumber);
+
+    cout << "Congratulations! You've guessed the number!\n";
+    cout << "It took you " << attemptCount << " attempts to guess the correct number.\n";
+}
+
+int main() {
+    playGuessingGame();
+    return 0;
+}
