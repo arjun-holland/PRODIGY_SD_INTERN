@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to check if placing a number is valid or not
+bool is_valid(vector<vector<int>>& board, int row, int col, int num) {
+	
+    for (int i = 0; i < 9; i++) {  // Check the row
+        if (board[row][i] == num) {
+            return false;
+        }
+    }
+
+    for (int i = 0; i < 9; i++) {   // Check the column
+        if (board[i][col] == num) {
+            return false;
+        }
+    }
+
+    int start_row = 3 * (row / 3);    // Check the 3x3 subgrid
+    int start_col = 3 * (col / 3);
+    for (int i = start_row; i < start_row + 3; i++) {
+        for (int j = start_col; j < start_col + 3; j++) {
+            if (board[i][j] == num) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+// Function to solve the Sudoku using backtracking 
+bool solve_sudoku(vector<vector<int>>& board) {
+    for (int row = 0; row < 9; row++) {
+        for (int col = 0; col < 9; col++) {
+            if (board[row][col] == 0) {      // Find an empty cell
+                for (int num = 1; num <= 9; num++) {  // Try numbers 1-9
+                    if (is_valid(board, row, col, num)) { // Check if valid
+                        board[row][col] = num;   // Place the number(Do)
+                        if (solve_sudoku(board)) { // Recur
+                            return true;
+                        }
+                        board[row][col] = 0; // Backtrack(UnDo)
+                    }
+                }
+                return false; // Trigger backtracking
+            }
+        }
+    }
+    return true; // Puzzle solved
+}
+
+// Function to print the Sudoku board
+void print_board(const vector<vector<int>>& board) {
+    for (const auto& row : board) {
+        for (int num : row) {
+            if (num == 0) {
+                cout << ". ";
+            } else {
+                cout << num << " ";
+            }
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    vector<vector<int>> sudoku_board(9, vector<int>(9, 0)); // Declare a 9x9 board
+
+    // Take user input for the Sudoku board
+    cout << "Enter the Sudoku puzzle (9x9 grid). Use 0 for empty cells:\n";
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            cin >> sudoku_board[i][j];
+        }
+    }
+    cout << "Input Sudoku board:\n";
+    print_board(sudoku_board);
+
+    // Solve the Sudoku and display the result
+    if (solve_sudoku(sudoku_board)) {
+        cout << "\nSolved Sudoku:\n";
+        print_board(sudoku_board);
+    } else {
+        cout << "\nNo solution exists!" << endl;
+    }
+    return 0;
+}
